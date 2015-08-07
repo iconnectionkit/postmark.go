@@ -26,7 +26,6 @@ type Message struct {
 	Tag           string
 	HtmlBody      io.Reader
 	TextBody      io.Reader
-	TemplateId    int
 	TemplateModel map[string]interface{}
 	ReplyTo       *mail.Address
 	Headers       mail.Header
