@@ -26,7 +26,6 @@ type Message struct {
 	Tag           string
 	HtmlBody      io.Reader
 	TextBody      io.Reader
-	TemplateModel map[string]interface{}
 	ReplyTo       *mail.Address
 	Headers       mail.Header
 	Attachments   []Attachment
@@ -42,8 +41,6 @@ func (m *Message) MarshalJSON() ([]byte, error) {
 		Tag           string
 		HtmlBody      string `json:",omitempty"`
 		TextBody      string `json:",omitempty"`
-		TemplateId    int
-		TemplateModel map[string]interface{}
 		ReplyTo       string
 		Headers       []map[string]string
 		Attachments   []Attachment `json:"omitempty"`
@@ -81,8 +78,6 @@ func (m *Message) MarshalJSON() ([]byte, error) {
 		}
 		doc.TextBody = string(textBody)
 	}
-	doc.TemplateId = m.TemplateId
-	doc.TemplateModel = m.TemplateModel
 	if m.ReplyTo != nil {
 		doc.ReplyTo = m.ReplyTo.String()
 	}
@@ -160,9 +155,7 @@ func (c *Client) Send(msg *Message) (*Result, error) {
 	}
 
 	url := c.endpoint("email")
-	if msg.TemplateId != 0 {
-		url = c.endpoint("email/withTemplate")
-	}
+
 
 	req, err := http.NewRequest("POST", url.String(), &buf)
 	if err != nil {
